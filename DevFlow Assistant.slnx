@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DevFlow Assistant/DevFlowAssistant.Desktop.csproj" />
+  <Project Path="DevFlowAssistant.Application/DevFlowAssistant.Application.csproj" />
+  <Project Path="DevFlowAssistant.Infrastructure/DevFlowAssistant.Infrastructure.csproj" />
+  <Project Path="Domain/DevFlowAssistant.Domain.csproj" />
+</Solution>

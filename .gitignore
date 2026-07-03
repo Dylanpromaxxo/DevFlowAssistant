@@ -1,0 +1,28 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.tmp
+*.bak
+
+# Rider / JetBrains
+.idea/
+
+# SQLite temporales
+*.db-wal
+*.db-shm
+*.db-journal
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Mantener la base plantilla
+!Data/DevFlow.db
