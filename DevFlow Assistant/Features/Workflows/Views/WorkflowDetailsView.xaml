@@ -1,0 +1,50 @@
+<UserControl x:Class="DevFlow_Assistant.Features.Workflows.Views.WorkflowDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Margin="0,0,0,18">
+            <StackPanel DockPanel.Dock="Left">
+                <TextBlock Text="{Binding Name}" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{Binding Description}" Style="{StaticResource HelpText}"/>
+            </StackPanel>
+            <Button Content="Ejecutar" Command="{Binding ExecuteCommand}" Style="{StaticResource PrimaryButton}" Width="120" DockPanel.Dock="Right"/>
+        </DockPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource PanelBorder}" Margin="0,0,0,18">
+            <DockPanel>
+                <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <Button Content="Volver" Command="{Binding BackCommand}" Style="{StaticResource SecondaryButton}" Width="90" Margin="0,0,8,0"/>
+                    <Button Content="Editar" Command="{Binding EditCommand}" Style="{StaticResource SecondaryButton}" Width="90" Margin="0,0,8,0"/>
+                    <Button Content="Acciones" Command="{Binding ManageActionsCommand}" Style="{StaticResource SecondaryButton}" Width="110" Margin="0,0,8,0"/>
+                    <Button Content="Logs" Command="{Binding ViewLogsCommand}" Style="{StaticResource SecondaryButton}" Width="90"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource PanelBorder}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Acciones asociadas" Style="{StaticResource SectionTitle}"/>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Actions}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" Width="50"/>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.3*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding ActionType}" Width="130"/>
+                        <DataGridTextColumn Header="Valor" Binding="{Binding Value}" Width="2*"/>
+                        <DataGridCheckBoxColumn Header="Activa" Binding="{Binding IsEnabled}" Width="80"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

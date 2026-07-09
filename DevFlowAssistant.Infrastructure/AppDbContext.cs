@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.RightsManagement;
 using DevFlowAssistant.Domain;
-using Microsoft.EntityFrameworkCore;
 using DevFlowAssistant.Domain.Entities;
+using DevFlowAssistant.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevFlowAssistant.Infrastructure;
 
@@ -24,31 +22,49 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<WorkflowAction> WorkflowActions { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    {
-    }
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ExecutionLog>(entity =>
         {
-            entity.HasOne(d => d.Workflow).WithMany(p => p.ExecutionLogs)
-                .HasForeignKey(d => d.WorkflowId)
+            entity.Property(log => log.StartedAt)
+                .HasConversion(value => DateTimeStorage.ToStorage(value), value => DateTimeStorage.FromStorage(value))
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.Property(log => log.FinishedAt)
+                .HasConversion(value => DateTimeStorage.ToStorageNullable(value), value => DateTimeStorage.FromStorageNullable(value));
+
+            entity.HasOne(log => log.Workflow)
+                .WithMany(workflow => workflow.ExecutionLogs)
+                .HasForeignKey(log => log.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Workflow>(entity =>
         {
-            entity.Property(e => e.IsActive).HasDefaultValue(1);
+            entity.Property(workflow => workflow.IsActive).HasDefaultValue(true);
+
+            entity.Property(workflow => workflow.CreatedAt)
+                .HasConversion(value => DateTimeStorage.ToStorage(value), value => DateTimeStorage.FromStorage(value))
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.Property(workflow => workflow.UpdatedAt)
+                .HasConversion(value => DateTimeStorage.ToStorageNullable(value), value => DateTimeStorage.FromStorageNullable(value));
         });
 
         modelBuilder.Entity<WorkflowAction>(entity =>
         {
-            entity.Property(e => e.IsEnabled).HasDefaultValue(1);
+            entity.Property(action => action.Name).HasDefaultValue("Nueva accion");
+            entity.Property(action => action.IsEnabled).HasDefaultValue(true);
+            entity.Property(action => action.TimeoutSeconds).HasDefaultValue(120);
+            entity.Property(action => action.ContinueOnError).HasDefaultValue(false);
 
-            entity.HasOne(d => d.Workflow).WithMany(p => p.WorkflowActions)
-                .HasForeignKey(d => d.WorkflowId)
+            entity.Property(action => action.CreatedAt)
+                .HasConversion(value => DateTimeStorage.ToStorage(value), value => DateTimeStorage.FromStorage(value))
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasOne(action => action.Workflow)
+                .WithMany(workflow => workflow.WorkflowActions)
+                .HasForeignKey(action => action.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

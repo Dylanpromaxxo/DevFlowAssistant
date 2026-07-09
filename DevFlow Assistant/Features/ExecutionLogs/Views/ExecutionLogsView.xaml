@@ -1,0 +1,32 @@
+<UserControl x:Class="DevFlow_Assistant.Features.ExecutionLogs.Views.ExecutionLogsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Margin="0,0,0,18">
+            <StackPanel DockPanel.Dock="Left">
+                <TextBlock Text="Historial de ejecucion" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Consulta resultados, errores y duracion de las acciones ejecutadas." Style="{StaticResource HelpText}"/>
+            </StackPanel>
+            <Button Content="Refrescar" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Width="110" DockPanel.Dock="Right"/>
+        </DockPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource PanelBorder}">
+            <DataGrid ItemsSource="{Binding Logs}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Inicio" Binding="{Binding StartedAt}" Width="160"/>
+                    <DataGridTextColumn Header="Fin" Binding="{Binding FinishedAt}" Width="160"/>
+                    <DataGridTextColumn Header="Accion" Binding="{Binding ActionName}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="100"/>
+                    <DataGridTextColumn Header="Mensaje" Binding="{Binding Message}" Width="2*"/>
+                    <DataGridTextColumn Header="Duracion ms" Binding="{Binding DurationMs}" Width="110"/>
+                    <DataGridTextColumn Header="Error" Binding="{Binding ErrorDetails}" Width="2*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

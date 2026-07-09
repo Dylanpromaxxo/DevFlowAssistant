@@ -1,18 +1,13 @@
-﻿using DevFlowAssistant.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DevFlowAssistant.Domain;
 
-namespace DevFlowAssistant.Application.Interfaces
+namespace DevFlowAssistant.Application.Interfaces;
+
+public interface IWorkflowRepository
 {
-    public interface IWorkflowRepository
-    {
-        Task<List<Workflow>> GetAllAsync();
-        Task<Workflow?> GetByIdAsync(int id);
-        Task AddAsync(Workflow workflow);
-        Task UpdateAsync(Workflow workflow);
-        Task Delete(int id);
-    }
+    Task<List<Workflow>> GetAllAsync();
+    Task<Workflow?> GetByIdAsync(int id);
+    Task<Workflow?> GetByIdWithActionsAsync(int id);
+    Task AddAsync(Workflow workflow);
+    Task UpdateAsync(Workflow workflow);
+    Task DeleteAsync(int id);
 }

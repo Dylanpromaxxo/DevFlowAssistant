@@ -1,0 +1,96 @@
+<UserControl x:Class="DevFlow_Assistant.Features.WorkflowActions.Views.WorkflowActionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Margin="0,0,0,18">
+            <StackPanel DockPanel.Dock="Left">
+                <TextBlock Text="Acciones del workflow" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Agrega comandos, apps, URLs o Docker al workflow seleccionado." Style="{StaticResource HelpText}"/>
+            </StackPanel>
+            <Button Content="Volver al detalle" Command="{Binding BackCommand}" Style="{StaticResource SecondaryButton}" Width="150" DockPanel.Dock="Right"/>
+        </DockPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource PanelBorder}" Margin="0,0,0,18">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Nombre" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Tag="Abrir VS Code" Style="{StaticResource TextInput}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Tipo" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" Height="36"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="4">
+                    <TextBlock Text="Valor" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Tag="code, https://..., docker command" Style="{StaticResource TextInput}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="6">
+                    <TextBlock Text="Argumentos" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding Arguments, UpdateSourceTrigger=PropertyChanged}" Tag="--version, up -d" Style="{StaticResource TextInput}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="8">
+                    <TextBlock Text="Directorio" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding WorkingDirectory, UpdateSourceTrigger=PropertyChanged}" Tag="C:\ruta\proyecto" Style="{StaticResource TextInput}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="10">
+                    <TextBlock Text="Timeout" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding TimeoutSeconds, UpdateSourceTrigger=PropertyChanged}" Tag="120" Style="{StaticResource TextInput}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="11" Orientation="Horizontal" Margin="0,14,0,0">
+                    <CheckBox Content="Continuar si falla" IsChecked="{Binding ContinueOnError}" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    <Button Content="Agregar" Command="{Binding AddCommand}" Style="{StaticResource PrimaryButton}" Width="100" Margin="0,0,8,0"/>
+                    <Button Content="Guardar seleccion" Command="{Binding SaveSelectedCommand}" Style="{StaticResource SecondaryButton}" Width="145" Margin="0,0,8,0"/>
+                    <Button Content="Eliminar" Command="{Binding DeleteSelectedCommand}" Style="{StaticResource SecondaryButton}" Width="100" Margin="0,0,8,0"/>
+                    <Button Content="Subir" Command="{Binding MoveUpCommand}" Style="{StaticResource SecondaryButton}" Width="80" Margin="0,0,8,0"/>
+                    <Button Content="Bajar" Command="{Binding MoveDownCommand}" Style="{StaticResource SecondaryButton}" Width="80"/>
+                    <TextBlock Text="{Binding ValidationMessage}" Foreground="#DC2626" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource PanelBorder}">
+            <DataGrid ItemsSource="{Binding Actions}"
+                      SelectedItem="{Binding SelectedAction, Mode=TwoWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" Width="50"/>
+                    <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Tipo" Binding="{Binding ActionType}" Width="130"/>
+                    <DataGridTextColumn Header="Valor" Binding="{Binding Value}" Width="2*"/>
+                    <DataGridTextColumn Header="Argumentos" Binding="{Binding Arguments}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Directorio" Binding="{Binding WorkingDirectory}" Width="1.2*"/>
+                    <DataGridCheckBoxColumn Header="Activa" Binding="{Binding IsEnabled}" Width="80"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

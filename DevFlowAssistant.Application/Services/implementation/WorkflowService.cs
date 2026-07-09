@@ -1,44 +1,73 @@
-﻿using DevFlowAssistant.Application.Interfaces;
+using DevFlowAssistant.Application.Interfaces;
+using DevFlowAssistant.Application.Models;
 using DevFlowAssistant.Application.Services.Interface;
 using DevFlowAssistant.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DevFlowAssistant.Application.Services.implementation
+namespace DevFlowAssistant.Application.Services.implementation;
+
+public class WorkflowService : IWorkflowService
 {
-    public class WorkflowService : IWorkflowService
+    private readonly IWorkflowRepository _workflowRepository;
+
+    public WorkflowService(IWorkflowRepository workflowRepository)
     {
-        private readonly IWorkflowRepository _workflowRepository;
+        _workflowRepository = workflowRepository;
+    }
 
-        public WorkflowService(IWorkflowRepository workflowRepository)
+    public Task<List<Workflow>> GetAllAsync()
+    {
+        return _workflowRepository.GetAllAsync();
+    }
+
+    public Task<Workflow?> GetByIdAsync(int id)
+    {
+        return _workflowRepository.GetByIdAsync(id);
+    }
+
+    public Task<Workflow?> GetByIdWithActionsAsync(int id)
+    {
+        return _workflowRepository.GetByIdWithActionsAsync(id);
+    }
+
+    public async Task<Workflow> CreateAsync(CreateWorkflowRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
         {
-            _workflowRepository = workflowRepository;
+            throw new ArgumentException("El nombre del workflow es obligatorio.");
         }
 
-        public Task CreateAsync(string name, string? Description)
+        var workflow = new Workflow
         {
+            Name = request.Name.Trim(),
+            Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
 
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("El nombre del workflow es obligatorio.");
+        await _workflowRepository.AddAsync(workflow);
+        return workflow;
+    }
 
-
-            var workflow = new Workflow
-            {
-                Name = name.Trim(),
-                Description = Description?.Trim()   ,
-                IsActive = 1,
-                CreatedAt = DateTime.Now.ToString(),
-                UpdatedAt = null
-            };
-            return _workflowRepository.AddAsync(workflow);
+    public async Task UpdateAsync(UpdateWorkflowRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new ArgumentException("El nombre del workflow es obligatorio.");
         }
 
-        public async Task<List<Workflow>> GetAllAsync()
-        {
-            return await _workflowRepository.GetAllAsync();
-        }
+        var workflow = await _workflowRepository.GetByIdAsync(request.Id)
+            ?? throw new InvalidOperationException("No se encontró el workflow.");
+
+        workflow.Name = request.Name.Trim();
+        workflow.Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim();
+        workflow.IsActive = request.IsActive;
+        workflow.UpdatedAt = DateTime.UtcNow;
+
+        await _workflowRepository.UpdateAsync(workflow);
+    }
+
+    public Task DeleteAsync(int id)
+    {
+        return _workflowRepository.DeleteAsync(id);
     }
 }

@@ -32,4 +32,11 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Shell\Navigation\" />
+    <Folder Include="Themes\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Shared\" />
+  </ItemGroup>
+
 </Project>

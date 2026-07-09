@@ -1,6 +1,4 @@
-﻿using DevFlowAssistant.Domain.Entities;
-using System;
-using System.Collections.Generic;
+using DevFlowAssistant.Domain.Entities;
 
 namespace DevFlowAssistant.Domain;
 
@@ -12,11 +10,11 @@ public partial class Workflow
 
     public string? Description { get; set; }
 
-    public int IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
-    public string CreatedAt { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public string? UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual ICollection<ExecutionLog> ExecutionLogs { get; set; } = new List<ExecutionLog>();
 
