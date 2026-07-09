@@ -11,20 +11,27 @@ namespace DevFlow_Assistant.Features.Workflows.ViewModels;
 public class WorkflowListViewModel : ViewModelBase
 {
     private readonly IWorkflowService _workflowService;
+    private readonly IWorkflowExecutionService _executionService;
     private readonly INavigationService _navigationService;
     private Workflow? _selectedWorkflow;
     private string _searchText = string.Empty;
+    private string _statusMessage = string.Empty;
 
-    public WorkflowListViewModel(IWorkflowService workflowService, INavigationService navigationService)
+    public WorkflowListViewModel(
+        IWorkflowService workflowService,
+        IWorkflowExecutionService executionService,
+        INavigationService navigationService)
     {
         _workflowService = workflowService;
+        _executionService = executionService;
         _navigationService = navigationService;
 
         RefreshCommand = new AsyncRelayCommand(_ => LoadAsync());
         CreateCommand = new RelayCommand(_ => _navigationService.NavigateTo<WorkflowCreateViewModel>());
-        OpenDetailsCommand = new RelayCommand(_ => OpenSelected(), _ => SelectedWorkflow is not null);
-        EditCommand = new RelayCommand(_ => EditSelected(), _ => SelectedWorkflow is not null);
-        DeleteCommand = new AsyncRelayCommand(_ => DeleteSelectedAsync(), _ => SelectedWorkflow is not null);
+        OpenDetailsCommand = new RelayCommand(OpenDetails, CanUseWorkflow);
+        EditCommand = new RelayCommand(Edit, CanUseWorkflow);
+        DeleteCommand = new AsyncRelayCommand(DeleteAsync, CanUseWorkflow);
+        ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanUseWorkflow);
 
         _ = LoadAsync();
     }
@@ -49,11 +56,18 @@ public class WorkflowListViewModel : ViewModelBase
         }
     }
 
+    public string StatusMessage
+    {
+        get => _statusMessage;
+        set => SetProperty(ref _statusMessage, value);
+    }
+
     public ICommand RefreshCommand { get; }
     public ICommand CreateCommand { get; }
     public ICommand OpenDetailsCommand { get; }
     public ICommand EditCommand { get; }
     public ICommand DeleteCommand { get; }
+    public ICommand ExecuteCommand { get; }
 
     public async Task LoadAsync()
     {
@@ -64,6 +78,10 @@ public class WorkflowListViewModel : ViewModelBase
         {
             Workflows.Add(workflow);
         }
+
+        StatusMessage = Workflows.Count == 0
+            ? "No hay workflows para mostrar."
+            : $"{Workflows.Count} workflow(s) disponibles.";
     }
 
     private bool MatchesSearch(Workflow workflow)
@@ -73,35 +91,61 @@ public class WorkflowListViewModel : ViewModelBase
             || (workflow.Description?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
-    private void OpenSelected()
+    private bool CanUseWorkflow(object? parameter)
     {
-        if (SelectedWorkflow is null)
-        {
-            return;
-        }
-
-        _navigationService.NavigateTo<WorkflowDetailsViewModel>(viewModel => viewModel.WorkflowId = SelectedWorkflow.Id);
+        return parameter is Workflow || SelectedWorkflow is not null;
     }
 
-    private void EditSelected()
+    private Workflow? ResolveWorkflow(object? parameter)
     {
-        if (SelectedWorkflow is null)
-        {
-            return;
-        }
-
-        _navigationService.NavigateTo<WorkflowEditViewModel>(viewModel => viewModel.WorkflowId = SelectedWorkflow.Id);
+        return parameter as Workflow ?? SelectedWorkflow;
     }
 
-    private async Task DeleteSelectedAsync()
+    private void OpenDetails(object? parameter)
     {
-        if (SelectedWorkflow is null)
+        var workflow = ResolveWorkflow(parameter);
+        if (workflow is null)
         {
             return;
         }
 
-        await _workflowService.DeleteAsync(SelectedWorkflow.Id);
+        _navigationService.NavigateTo<WorkflowDetailsViewModel>(viewModel => viewModel.WorkflowId = workflow.Id);
+    }
+
+    private void Edit(object? parameter)
+    {
+        var workflow = ResolveWorkflow(parameter);
+        if (workflow is null)
+        {
+            return;
+        }
+
+        _navigationService.NavigateTo<WorkflowEditViewModel>(viewModel => viewModel.WorkflowId = workflow.Id);
+    }
+
+    private async Task DeleteAsync(object? parameter)
+    {
+        var workflow = ResolveWorkflow(parameter);
+        if (workflow is null)
+        {
+            return;
+        }
+
+        await _workflowService.DeleteAsync(workflow.Id);
         SelectedWorkflow = null;
         await LoadAsync();
+    }
+
+    private async Task ExecuteAsync(object? parameter)
+    {
+        var workflow = ResolveWorkflow(parameter);
+        if (workflow is null)
+        {
+            return;
+        }
+
+        StatusMessage = $"Ejecutando {workflow.Name}...";
+        var logs = await _executionService.ExecuteAsync(workflow.Id);
+        StatusMessage = $"Ejecucion finalizada para {workflow.Name}. Registros generados: {logs.Count}.";
     }
 }

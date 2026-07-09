@@ -29,22 +29,59 @@
         </Border>
 
         <Border Grid.Row="2" Style="{StaticResource PanelBorder}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Acciones asociadas" Style="{StaticResource SectionTitle}"/>
-                <DataGrid Grid.Row="1" ItemsSource="{Binding Actions}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" Width="50"/>
-                        <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.3*"/>
-                        <DataGridTextColumn Header="Tipo" Binding="{Binding ActionType}" Width="130"/>
-                        <DataGridTextColumn Header="Valor" Binding="{Binding Value}" Width="2*"/>
-                        <DataGridCheckBoxColumn Header="Activa" Binding="{Binding IsEnabled}" Width="80"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
+            <TabControl>
+                <TabItem Header="Resumen">
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{StaticResource BrushPrimarySoft}" CornerRadius="8" Padding="18">
+                            <StackPanel>
+                                <TextBlock Text="Estado del workflow" Style="{StaticResource KickerText}"/>
+                                <TextBlock Text="{Binding IsActive, StringFormat=Activo: {0}}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource BrushText}" Margin="0,8,0,0"/>
+                                <TextBlock Text="Usa Ejecutar para correr todas las acciones configuradas en orden." Style="{StaticResource HelpText}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Background="#F8FAFC" CornerRadius="8" Padding="18" BorderBrush="{StaticResource BrushBorder}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="Acciones configuradas" Style="{StaticResource KickerText}"/>
+                                <TextBlock Text="{Binding Actions.Count}" FontSize="30" FontWeight="Bold" Foreground="{StaticResource BrushPrimary}" Margin="0,6,0,0"/>
+                                <Button Content="Administrar acciones" Command="{Binding ManageActionsCommand}" Style="{StaticResource SecondaryButton}" Width="160" HorizontalAlignment="Left" Margin="0,12,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Acciones">
+                    <Grid Margin="0,14,0,0">
+                        <DataGrid ItemsSource="{Binding Actions}"
+                                  Visibility="{Binding Actions.Count, Converter={StaticResource HasItemsToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding SortOrder}" Width="50"/>
+                                <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.3*"/>
+                                <DataGridTextColumn Header="Tipo" Binding="{Binding ActionType}" Width="130"/>
+                                <DataGridTextColumn Header="Valor" Binding="{Binding Value}" Width="2*"/>
+                                <DataGridCheckBoxColumn Header="Activa" Binding="{Binding IsEnabled}" Width="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Text="Este workflow aun no tiene acciones. Agrega acciones para abrir apps, ejecutar comandos, levantar Docker o abrir URLs."
+                                   Style="{StaticResource EmptyStateText}"
+                                   Visibility="{Binding Actions.Count, Converter={StaticResource NoItemsToVisibilityConverter}}"/>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Historial">
+                    <StackPanel Margin="0,14,0,0">
+                        <TextBlock Text="Consulta el historial completo desde la pantalla de logs." Style="{StaticResource HelpText}" Margin="0,0,0,12"/>
+                        <Button Content="Ver historial de este workflow" Command="{Binding ViewLogsCommand}" Style="{StaticResource PrimaryButton}" Width="210" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
         </Border>
     </Grid>
 </UserControl>

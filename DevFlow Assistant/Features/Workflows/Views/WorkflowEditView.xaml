@@ -18,16 +18,22 @@
                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                          Tag="Nombre visible del workflow"
                          Style="{StaticResource TextInput}"
-                         Margin="0,0,0,12"/>
+                         Margin="0,0,0,6"/>
+                <TextBlock Text="Debe ser claro para identificarlo en acciones rapidas y ejecuciones."
+                           Style="{StaticResource HelpText}"
+                           Margin="0,0,0,12"/>
 
                 <TextBlock Text="Descripcion" Style="{StaticResource FieldLabel}"/>
                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                          Tag="Describe para que sirve este workflow"
                          Style="{StaticResource TextInput}"
-                         Margin="0,0,0,12"/>
+                         Margin="0,0,0,6"/>
+                <TextBlock Text="Explica el resultado esperado cuando se ejecute."
+                           Style="{StaticResource HelpText}"
+                           Margin="0,0,0,12"/>
 
                 <CheckBox Content="Workflow activo" IsChecked="{Binding IsActive}" Margin="0,0,0,12"/>
-                <TextBlock Text="{Binding ValidationMessage}" Foreground="#DC2626" Margin="0,0,0,12"/>
+                <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource BrushDanger}" Margin="0,0,0,12"/>
 
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Guardar cambios" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}" Width="150" Margin="0,0,8,0"/>

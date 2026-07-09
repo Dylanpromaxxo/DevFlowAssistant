@@ -18,15 +18,21 @@
                 <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                          Tag="Ejemplo: Abrir entorno backend"
                          Style="{StaticResource TextInput}"
-                         Margin="0,0,0,12"/>
+                         Margin="0,0,0,6"/>
+                <TextBlock Text="Usa un nombre corto que puedas reconocer en la lista y dashboard."
+                           Style="{StaticResource HelpText}"
+                           Margin="0,0,0,12"/>
 
                 <TextBlock Text="Descripcion" Style="{StaticResource FieldLabel}"/>
                 <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                          Tag="Ejemplo: Abre VS Code, Docker y paginas necesarias"
                          Style="{StaticResource TextInput}"
-                         Margin="0,0,0,12"/>
+                         Margin="0,0,0,6"/>
+                <TextBlock Text="Describe que herramientas, comandos o paginas prepara este workflow."
+                           Style="{StaticResource HelpText}"
+                           Margin="0,0,0,12"/>
 
-                <TextBlock Text="{Binding ValidationMessage}" Foreground="#DC2626" Margin="0,0,0,12"/>
+                <TextBlock Text="{Binding ValidationMessage}" Foreground="{StaticResource BrushDanger}" Margin="0,0,0,12"/>
 
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Guardar workflow" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}" Width="160" Margin="0,0,8,0"/>

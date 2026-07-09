@@ -5,6 +5,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -15,6 +16,8 @@
 
         <Grid Grid.Row="1" Margin="0,0,0,18">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="*"/>
@@ -33,23 +36,80 @@
                     <TextBlock Text="{Binding LastStatus}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource BrushText}"/>
                 </StackPanel>
             </Border>
+
+            <Border Grid.Column="4" Style="{StaticResource PanelBorder}">
+                <StackPanel>
+                    <TextBlock Text="Acciones rapidas" Style="{StaticResource SectionTitle}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Nuevo workflow" Command="{Binding CreateWorkflowCommand}" Style="{StaticResource PrimaryButton}" Width="140" Margin="0,0,8,0"/>
+                        <Button Content="Ver workflows" Command="{Binding OpenWorkflowsCommand}" Style="{StaticResource SecondaryButton}" Width="130"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
         </Grid>
 
-        <Border Grid.Row="2" Style="{StaticResource PanelBorder}">
+        <Border Grid.Row="2" Style="{StaticResource PanelBorder}" Margin="0,0,0,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Workflows recientes" Style="{StaticResource SectionTitle}"/>
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding RecentWorkflows}"
+                          MinHeight="145"
+                          Visibility="{Binding RecentWorkflows.Count, Converter={StaticResource HasItemsToVisibilityConverter}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.4*"/>
+                        <DataGridTextColumn Header="Descripcion" Binding="{Binding Description}" Width="2*"/>
+                        <DataGridTextColumn Header="Creado" Binding="{Binding CreatedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                        <DataGridTemplateColumn Header="Accion" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Ejecutar"
+                                            Command="{Binding DataContext.ExecuteWorkflowCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource CompactButton}"
+                                            Background="{StaticResource BrushPrimary}"
+                                            Foreground="White"
+                                            Width="82"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Grid.Row="1"
+                           Text="Aun no hay workflows. Crea uno para ejecutar automatizaciones desde este panel."
+                           Style="{StaticResource EmptyStateText}"
+                           Visibility="{Binding RecentWorkflows.Count, Converter={StaticResource NoItemsToVisibilityConverter}}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource PanelBorder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Ejecuciones recientes" Style="{StaticResource SectionTitle}"/>
-                <DataGrid Grid.Row="1" ItemsSource="{Binding RecentLogs}">
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding RecentLogs}"
+                          Visibility="{Binding RecentLogs.Count, Converter={StaticResource HasItemsToVisibilityConverter}}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Inicio" Binding="{Binding StartedAt}" Width="160"/>
+                        <DataGridTextColumn Header="Inicio" Binding="{Binding StartedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
                         <DataGridTextColumn Header="Accion" Binding="{Binding ActionName}" Width="*"/>
                         <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="120"/>
                         <DataGridTextColumn Header="Mensaje" Binding="{Binding Message}" Width="2*"/>
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <TextBlock Grid.Row="1"
+                           Text="Aun no hay ejecuciones registradas."
+                           Style="{StaticResource EmptyStateText}"
+                           Visibility="{Binding RecentLogs.Count, Converter={StaticResource NoItemsToVisibilityConverter}}"/>
             </Grid>
         </Border>
     </Grid>

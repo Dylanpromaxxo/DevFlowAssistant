@@ -12,6 +12,7 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly INavigationService _navigationService;
     private object? _currentViewModel;
+    private string _currentTitle = "Dashboard";
     private string _statusMessage = "Listo.";
 
     public MainWindowViewModel(INavigationService navigationService)
@@ -25,9 +26,9 @@ public class MainWindowViewModel : ViewModelBase
 
         NavigationItems =
         [
-            new NavigationItem("Dashboard", NavigateDashboardCommand),
-            new NavigationItem("Workflows", NavigateWorkflowsCommand),
-            new NavigationItem("Historial", NavigateLogsCommand)
+            new NavigationItem("Dashboard", "D", "Principal", NavigateDashboardCommand),
+            new NavigationItem("Workflows", "W", "Automatizacion", NavigateWorkflowsCommand),
+            new NavigationItem("Historial", "H", "Automatizacion", NavigateLogsCommand)
         ];
 
         NavigateTo<DashboardViewModel>();
@@ -38,6 +39,12 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand NavigateDashboardCommand { get; }
     public ICommand NavigateWorkflowsCommand { get; }
     public ICommand NavigateLogsCommand { get; }
+
+    public string CurrentTitle
+    {
+        get => _currentTitle;
+        private set => SetProperty(ref _currentTitle, value);
+    }
 
     public object? CurrentViewModel
     {
@@ -54,6 +61,25 @@ public class MainWindowViewModel : ViewModelBase
     private void NavigateTo<TViewModel>() where TViewModel : class
     {
         _navigationService.NavigateTo<TViewModel>();
-        StatusMessage = $"Vista actual: {typeof(TViewModel).Name.Replace("ViewModel", string.Empty)}.";
+        var title = typeof(TViewModel).Name.Replace("ViewModel", string.Empty);
+        CurrentTitle = title;
+        StatusMessage = $"Vista actual: {title}.";
+
+        foreach (var item in NavigationItems)
+        {
+            item.IsActive = IsActiveItem<TViewModel>(item.Label);
+        }
+    }
+
+    private static bool IsActiveItem<TViewModel>(string label)
+    {
+        var viewModelName = typeof(TViewModel).Name;
+        return label switch
+        {
+            "Dashboard" => viewModelName.Contains("Dashboard", StringComparison.OrdinalIgnoreCase),
+            "Workflows" => viewModelName.Contains("Workflow", StringComparison.OrdinalIgnoreCase),
+            "Historial" => viewModelName.Contains("ExecutionLog", StringComparison.OrdinalIgnoreCase),
+            _ => false
+        };
     }
 }

@@ -34,21 +34,64 @@
                 </Grid.RowDefinitions>
 
                 <DataGrid ItemsSource="{Binding Workflows}"
-                          SelectedItem="{Binding SelectedWorkflow, Mode=TwoWay}">
+                          SelectedItem="{Binding SelectedWorkflow, Mode=TwoWay}"
+                          Visibility="{Binding Workflows.Count, Converter={StaticResource HasItemsToVisibilityConverter}}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nombre" Binding="{Binding Name}" Width="1.4*"/>
                         <DataGridTextColumn Header="Descripcion" Binding="{Binding Description}" Width="2*"/>
                         <DataGridCheckBoxColumn Header="Activo" Binding="{Binding IsActive}" Width="90"/>
-                        <DataGridTextColumn Header="Creado" Binding="{Binding CreatedAt}" Width="170"/>
+                        <DataGridTextColumn Header="Creado" Binding="{Binding CreatedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                        <DataGridTemplateColumn Header="Acciones" Width="290">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Ejecutar"
+                                                Command="{Binding DataContext.ExecuteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource CompactButton}"
+                                                Background="{StaticResource BrushPrimary}"
+                                                Foreground="White"
+                                                Width="82"
+                                                Margin="0,0,6,0"
+                                                ToolTip="Ejecutar este workflow ahora"/>
+                                        <Button Content="Detalle"
+                                                Command="{Binding DataContext.OpenDetailsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource CompactButton}"
+                                                Width="74"
+                                                Margin="0,0,6,0"/>
+                                        <Button Content="Editar"
+                                                Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource CompactButton}"
+                                                Width="62"
+                                                Margin="0,0,6,0"/>
+                                        <Button Content="Eliminar"
+                                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource CompactButton}"
+                                                Background="{StaticResource BrushDangerSoft}"
+                                                Foreground="{StaticResource BrushDanger}"
+                                                Width="74"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
-                    <Button Content="Refrescar" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Width="110" Margin="0,0,8,0"/>
-                    <Button Content="Ver detalle" Command="{Binding OpenDetailsCommand}" Style="{StaticResource PrimaryButton}" Width="120" Margin="0,0,8,0"/>
-                    <Button Content="Editar" Command="{Binding EditCommand}" Style="{StaticResource SecondaryButton}" Width="90" Margin="0,0,8,0"/>
-                    <Button Content="Eliminar" Command="{Binding DeleteCommand}" Style="{StaticResource SecondaryButton}" Width="100"/>
-                </StackPanel>
+                <TextBlock Text="No hay workflows para mostrar. Crea tu primer workflow para automatizar aplicaciones, comandos o paginas web."
+                           Style="{StaticResource EmptyStateText}"
+                           Visibility="{Binding Workflows.Count, Converter={StaticResource NoItemsToVisibilityConverter}}"/>
+
+                <DockPanel Grid.Row="1" Margin="0,14,0,0">
+                    <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource HelpText}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        <Button Content="Refrescar" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Width="110" Margin="0,0,8,0"/>
+                        <Button Content="Ejecutar seleccionado" Command="{Binding ExecuteCommand}" CommandParameter="{Binding SelectedWorkflow}" Style="{StaticResource PrimaryButton}" Width="165" Margin="0,0,8,0"/>
+                        <Button Content="Ver detalle" Command="{Binding OpenDetailsCommand}" CommandParameter="{Binding SelectedWorkflow}" Style="{StaticResource SecondaryButton}" Width="120"/>
+                    </StackPanel>
+                </DockPanel>
             </Grid>
         </Border>
     </Grid>

@@ -12,52 +12,97 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="252"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0"
-                Background="#172033"
-                Padding="18">
+                Background="{StaticResource BrushSidebar}"
+                Padding="18,20">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="DevFlow"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="White"/>
-                    <TextBlock Text="Assistant"
-                               FontSize="13"
-                               Foreground="#A8B3C5"
-                               Margin="0,2,0,24"/>
+                    <Border Background="#1F2937" CornerRadius="10" Padding="12" Margin="0,0,0,24">
+                        <StackPanel>
+                            <TextBlock Text="DevFlow"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"/>
+                            <TextBlock Text="Assistant"
+                                       FontSize="13"
+                                       Foreground="{StaticResource BrushSidebarMuted}"
+                                       Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="NAVEGACION"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushSidebarMuted}"
+                               Margin="4,0,0,10"/>
 
                     <ItemsControl ItemsSource="{Binding NavigationItems}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding Label}"
-                                        Command="{Binding Command}"
-                                        Height="40"
-                                        HorizontalContentAlignment="Left"
-                                        Padding="12,0"
-                                        Margin="0,0,0,8"
-                                        Background="#22304A"
-                                        Foreground="White"
-                                        BorderThickness="0"
-                                        FontWeight="SemiBold"/>
+                                <Button Command="{Binding Command}" Style="{StaticResource NavButton}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="24"
+                                                Height="24"
+                                                CornerRadius="7"
+                                                Background="#374151"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Icon}"
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Label}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Group}" FontSize="11" Opacity="0.72"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
 
-                <TextBlock DockPanel.Dock="Bottom"
-                           Text="{Binding StatusMessage}"
-                           Foreground="#A8B3C5"
-                           TextWrapping="Wrap"
-                           FontSize="12"/>
+                <Border DockPanel.Dock="Bottom" Background="#1F2937" CornerRadius="8" Padding="12">
+                    <StackPanel>
+                        <TextBlock Text="Estado"
+                                   Foreground="{StaticResource BrushSidebarMuted}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   Foreground="#D1D5DB"
+                                   TextWrapping="Wrap"
+                                   FontSize="12"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
             </DockPanel>
         </Border>
 
-        <Grid Grid.Column="1" Margin="24">
-            <ContentControl Content="{Binding CurrentViewModel}"/>
+        <Grid Grid.Column="1" Margin="26,22,26,26">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <DockPanel Margin="0,0,0,18">
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="{Binding CurrentTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource BrushPrimary}"/>
+                    <TextBlock Text="Automatiza entornos, comandos, aplicaciones y ejecuciones repetitivas."
+                               Style="{StaticResource HelpText}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+            </DockPanel>
+
+            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}"/>
         </Grid>
     </Grid>
 </Window>

@@ -6,6 +6,16 @@
     <Color x:Key="ColorText">#172033</Color>
     <Color x:Key="ColorMuted">#64748B</Color>
     <Color x:Key="ColorPrimary">#2563EB</Color>
+    <Color x:Key="ColorPrimaryDark">#1D4ED8</Color>
+    <Color x:Key="ColorPrimarySoft">#DBEAFE</Color>
+    <Color x:Key="ColorDanger">#DC2626</Color>
+    <Color x:Key="ColorDangerSoft">#FEE2E2</Color>
+    <Color x:Key="ColorSuccess">#16A34A</Color>
+    <Color x:Key="ColorSuccessSoft">#DCFCE7</Color>
+    <Color x:Key="ColorWarning">#D97706</Color>
+    <Color x:Key="ColorWarningSoft">#FEF3C7</Color>
+    <Color x:Key="ColorSidebar">#111827</Color>
+    <Color x:Key="ColorSidebarMuted">#9CA3AF</Color>
 
     <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ColorBackground}"/>
     <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource ColorSurface}"/>
@@ -13,4 +23,14 @@
     <SolidColorBrush x:Key="BrushText" Color="{StaticResource ColorText}"/>
     <SolidColorBrush x:Key="BrushMuted" Color="{StaticResource ColorMuted}"/>
     <SolidColorBrush x:Key="BrushPrimary" Color="{StaticResource ColorPrimary}"/>
+    <SolidColorBrush x:Key="BrushPrimaryDark" Color="{StaticResource ColorPrimaryDark}"/>
+    <SolidColorBrush x:Key="BrushPrimarySoft" Color="{StaticResource ColorPrimarySoft}"/>
+    <SolidColorBrush x:Key="BrushDanger" Color="{StaticResource ColorDanger}"/>
+    <SolidColorBrush x:Key="BrushDangerSoft" Color="{StaticResource ColorDangerSoft}"/>
+    <SolidColorBrush x:Key="BrushSuccess" Color="{StaticResource ColorSuccess}"/>
+    <SolidColorBrush x:Key="BrushSuccessSoft" Color="{StaticResource ColorSuccessSoft}"/>
+    <SolidColorBrush x:Key="BrushWarning" Color="{StaticResource ColorWarning}"/>
+    <SolidColorBrush x:Key="BrushWarningSoft" Color="{StaticResource ColorWarningSoft}"/>
+    <SolidColorBrush x:Key="BrushSidebar" Color="{StaticResource ColorSidebar}"/>
+    <SolidColorBrush x:Key="BrushSidebarMuted" Color="{StaticResource ColorSidebarMuted}"/>
 </ResourceDictionary>

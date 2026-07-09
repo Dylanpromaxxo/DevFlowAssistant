@@ -16,17 +16,24 @@
         </DockPanel>
 
         <Border Grid.Row="1" Style="{StaticResource PanelBorder}">
-            <DataGrid ItemsSource="{Binding Logs}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Inicio" Binding="{Binding StartedAt}" Width="160"/>
-                    <DataGridTextColumn Header="Fin" Binding="{Binding FinishedAt}" Width="160"/>
-                    <DataGridTextColumn Header="Accion" Binding="{Binding ActionName}" Width="1.2*"/>
-                    <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="100"/>
-                    <DataGridTextColumn Header="Mensaje" Binding="{Binding Message}" Width="2*"/>
-                    <DataGridTextColumn Header="Duracion ms" Binding="{Binding DurationMs}" Width="110"/>
-                    <DataGridTextColumn Header="Error" Binding="{Binding ErrorDetails}" Width="2*"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            <Grid>
+                <DataGrid ItemsSource="{Binding Logs}"
+                          Visibility="{Binding Logs.Count, Converter={StaticResource HasItemsToVisibilityConverter}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Inicio" Binding="{Binding StartedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                        <DataGridTextColumn Header="Fin" Binding="{Binding FinishedAt, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="150"/>
+                        <DataGridTextColumn Header="Accion" Binding="{Binding ActionName}" Width="1.2*"/>
+                        <DataGridTextColumn Header="Estado" Binding="{Binding Status}" Width="100"/>
+                        <DataGridTextColumn Header="Mensaje" Binding="{Binding Message}" Width="2*"/>
+                        <DataGridTextColumn Header="Duracion ms" Binding="{Binding DurationMs}" Width="110"/>
+                        <DataGridTextColumn Header="Error" Binding="{Binding ErrorDetails}" Width="2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Text="Aun no hay registros de ejecucion para mostrar."
+                           Style="{StaticResource EmptyStateText}"
+                           Visibility="{Binding Logs.Count, Converter={StaticResource NoItemsToVisibilityConverter}}"/>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
